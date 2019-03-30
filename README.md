@@ -1,8 +1,8 @@
 avr-iot
 =======
 
-Notes on the [microchip][AVR-IoT WG] development board that can be
-viewed [docs][online].
+Notes on the [AVR-IoT WG][microchip] development board that are
+[hosted online][docs].
 
 
 [docs]: https://bitmandu.com/avr-iot/latest/index.html
