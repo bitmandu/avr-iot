@@ -1,0 +1,5 @@
+name: avr-iot
+title: AVR-IoT WG
+version: latest
+nav:
+- modules/ROOT/nav.adoc

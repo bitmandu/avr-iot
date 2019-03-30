@@ -1,0 +1,4 @@
+= AVR-IoT WG
+:microchip: https://www.microchip.com/developmenttools/ProductDetails/AC164160
+
+Notes on the {microchip}[AVR-IoT WG] development board.

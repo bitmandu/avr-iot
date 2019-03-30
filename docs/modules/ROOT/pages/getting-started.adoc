@@ -1,0 +1,173 @@
+= Getting Started Issues
+:user-guide: http://ww1.microchip.com/downloads/en/DeviceDoc/AVR-IoT-WG-Development-Board-User-Guide-50002809B.pdf
+:microchip: https://www.avr-iot.com/
+:miniterm: https://pyserial.readthedocs.io/en/latest/tools.html#module-serial.tools.miniterm
+:1: https://www.element14.com/community/roadTestReviews/2887/l/microchip-avr-iot-wg-dev-board-review
+
+[quote, '{microchip}[Microchip]']
+____
+Get your things on the Internet in 30 Seconds Flat with the AVR-IoT board!
+____
+
+Claims of "30 Seconds Flat" aside, it took closer to _two hours_ for
+me to get the demo appilication described in the {user-guide}[User
+Guide] to work.
+
+In case anybody else is having the same issues, here are some
+troubleshooting notes.
+
+== Connecting to the Wi-Fi Network
+
+The recommended procedure is as follows.
+
+1. Connect the AVR-IoT WG to your computer with a mini-USB cable
+
+2. Open the CURIOSITY drive and select `CLICK-ME.HTM` — this
+redirects you to the AVR-IoT web demo application, which has a URL
+like `\https://avr-iot.com/device/0123215BE1D6C474FE`
+
+3. Use the provided form to create and save `WIFI.CFG` to your
+computer with your network information
+
+4. Drag `WIFI.CFG` to the CURIOSITY drive
+
+When everything is working, the red LED on the AVR-IoT WG should turn
+off and be replaced by a pleasant blue LED and a flashing yellow LED
+(indicating that the light and temperature sensor data is being
+published).
+
+=== Problem 1: Dragging `WIFI.CFG` doesn't work
+
+In my experience, simply dragging `WIFI.CFG` over to the CURIOSITY
+drive didn't work. I {1}[have read] that repeating the drag-and-drop
+process can eventually work, but there is another way to update the
+Wi-Fi configuration using the serial command line interface that I
+feel is more robust.
+
+For this you will need to use a serial terminal application (like
+{miniterm}[pySerial's Miniterm]) to send the `wifi` command.
+
+[source, bash]
+----
+wifi SSID,PASSWORD,2 <1>
+----
+<1> Replace `SSID` and `PASSWORD` with the name and password of your
+Wi-Fi network. The last number is the security option for your
+network: one of the three options (1–3) outlined in the documentation.
+
+image::security-option.jpg[Wi-Fi Security Options, width=800]
+
+Here is how it looks using `miniterm.py`. (The `-e` flag echoes the
+input.)
+
+[source, bash]
+----
+$ miniterm.py -e /dev/ttyACM0
+--- Miniterm on /dev/ttyACM0  9600,8,N,1 ---
+--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H ---
+help
+--------------------------------------------
+Unknown command. List of available commands:
+reset
+device
+key
+reconnect
+version
+cli_version
+wifi <ssid>[,<pass>,[authType]]
+debug
+--------------------------------------------
+wifi SSID,PASSWORD,2
+----
+
+.Serial Port Permissions
+****
+
+If you get a permissions error connecting to the AVR-IoT serial
+interface, you will need to update the permissions of the /dev/ttyACM0
+device. Here is how to do this in Linux (Fedora).
+
+[source, bash]
+----
+could not open port '/dev/ttyACM0': [Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+----
+
+A quick fix is to update the permissions until you next login.
+
+[source, bash]
+----
+$ sudo chmod 0666 /dev/ttyACM0
+----
+
+A permanent solution is to add a rule for the TTY serial-USB device in
+/etc/udev/rules.d/.
+
+[source, bash]
+----
+$ cat /etc/udev/rules.d/99-ttyacm.rules
+# Rule for /dev/ttyACM0
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2175", ATTRS{serial}=="ATML3203051800007956", MODE="0666"
+----
+
+In the above, the `idVendor` and `idProduct` values are found using
+`lsusb`.
+
+[source, bash]
+----
+$ lsusb
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 004: ID 04f3:0903 Elan Microelectronics Corp.
+Bus 001 Device 003: ID 8087:0a2b Intel Corp.
+Bus 001 Device 002: ID 04f2:b56b Chicony Electronics Co., Ltd
+Bus 001 Device 005: ID 03eb:2175 Atmel Corp. <1>
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+----
+<1> `03eb:2175` is the `idVentor:idProduct`, respectively.
+
+The serial number `serial` can be found using `udevadm`.
+
+[source, bash]
+----
+$ udevadm info -a -n /dev/ttyACM0 | grep '{serial}' | head -n 1
+    ATTRS{serial}=="ATML3203051800007956" <1>
+----
+<1> The serial number is unique to your AVR-IoT WG device.
+
+After adding the new rule, it should be detected automatically next
+time you plug in the AVR-IoT WG device.
+
+****
+
+
+=== Problem 2: `CLICK-ME.HTM` doesn't redirect with the device UID
+
+When I open `CLICK-ME.HTM`, I am redirected to
+
+[source, URL]
+----
+https://avr-iot.com/device/--------------------------------------------
+----
+
+Instead of dashes, the URL is suppose to contain the unique device ID
+for the board. The correct ID can be found using the `device` command
+in the serial command line interface.
+
+[source, bash]
+----
+$ miniterm.py -e /dev/ttyACM0
+--- Miniterm on /dev/ttyACM0  9600,8,N,1 ---
+--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H ---
+device
+0123215BE1D6C474FE <1>
+----
+<1> Device ID
+
+With this device ID, navigating to
+
+[source, URL]
+----
+https://avr-iot.com/device/0123215BE1D6C474FE
+----
+
+will successfully open the demo application.
