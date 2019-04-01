@@ -9,12 +9,10 @@ ____
 Get your things on the Internet in 30 Seconds Flat with the AVR-IoT board!
 ____
 
-Claims of "30 Seconds Flat" aside, it took closer to _two hours_ for
-me to get the demo appilication described in the {user-guide}[User
-Guide] to work.
-
-In case anybody else is having the same issues, here are some
-troubleshooting notes.
+In case anybody else has similar issues getting the AVR-IoT WG demo
+application running in "30 Seconds Flat," here some notes on a couple
+problems I had following the _Getting Started_ instructions in the
+{user-guide}[User Guide].
 
 == Connecting to the Wi-Fi Network
 
@@ -140,9 +138,9 @@ time you plug in the AVR-IoT WG device.
 ****
 
 
-=== Problem 2: `CLICK-ME.HTM` doesn't redirect with the device UID
+=== Problem 2: `CLICK-ME.HTM` redirect link doesn't include the device ID
 
-When I open `CLICK-ME.HTM`, I am redirected to
+When I opened `CLICK-ME.HTM`, I was redirected to
 
 [source, URL]
 ----
@@ -150,8 +148,8 @@ https://avr-iot.com/device/--------------------------------------------
 ----
 
 Instead of dashes, the URL is suppose to contain the unique device ID
-for the board. The correct ID can be found using the `device` command
-in the serial command line interface.
+for the board. This ID can be found using the `device` command in the
+serial command line interface.
 
 [source, bash]
 ----
