@@ -11,7 +11,7 @@ ____
 
 In case anybody else has similar issues getting the AVR-IoT WG demo
 application running in "30 Seconds Flat," here some notes on a couple
-problems I had following the _Getting Started_ instructions in the
+quirks I found following the _Getting Started_ instructions in the
 {user-guide}[User Guide].
 
 == Connecting to the Wi-Fi Network
