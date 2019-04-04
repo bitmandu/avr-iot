@@ -10,8 +10,8 @@ Get your things on the Internet in 30 Seconds Flat with the AVR-IoT board!
 ____
 
 In case anybody else has similar issues getting the AVR-IoT WG demo
-application running in "30 Seconds Flat," here some notes on a couple
-quirks I found following the _Getting Started_ instructions in the
+application running in "30 Seconds Flat," here are notes on two
+problems I had following the _Getting Started_ instructions in the
 {user-guide}[User Guide].
 
 == Connecting to the Wi-Fi Network
