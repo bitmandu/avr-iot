@@ -1,3 +1,2 @@
-- xref:index.adoc[Introduction]
-- xref:getting-started.adoc[Getting Started Issues]
+- xref:index.adoc[AVR-IoT WG Notes]
 - xref:license.adoc[License]
